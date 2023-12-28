@@ -1,0 +1,99 @@
+default_language_version:
+    python: python3
+
+repos:
+  - repo: https://github.com/detailyang/pre-commit-shell
+    rev: v1.0.6
+    hooks:
+    - id: shell-lint
+      args: ['--exclude','SC1090,SC2046,SC2005,SC2035,SC2086']
+
+  - repo: https://github.com/timothycrosley/isort
+    rev: 5.12.0
+    hooks:
+    - id: isort
+      language: python
+      args: ["-sl", "-l 120"]
+
+  - repo: https://github.com/myint/autoflake
+    rev: v1.4  # Use the latest version
+    hooks:
+      - id: autoflake
+        args: [ '--remove-all-unused-imports', '--remove-unused-variables', '--in-place', '--exclude=__init__.py', '--exclude=apps.py' ]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.4.0
+    hooks:
+    - id: check-ast
+      name: check-ast
+      description: Simply check whether files parse as valid python.
+    - id: check-builtin-literals
+      name: check-builtin-literals
+      description: Require literal syntax when initializing empty, or zero Python builtin types.
+    - id: check-docstring-first
+      name: check-docstring-first
+      description: Checks for a common error of placing code before the docstring.
+    - id: check-added-large-files
+      name: check-added-large-files
+      description: Prevent giant files from being committed.
+    - id: check-merge-conflict
+      name: check-merge-conflict
+      description: Check for files that contain merge conflict strings.
+    - id: check-symlinks
+      name: check-symlinks
+      description: Checks for symlinks which do not point to anything.
+    - id: check-yaml
+      name: check-yaml
+      description: Attempts to load all yaml files to verify syntax.
+    - id: check-toml
+      name: check-toml
+      description: Attempts to load all TOML files to verify syntax.
+    - id: debug-statements
+      name: debug-statements
+      description: Check for debugger imports and py37+ breakpoint() calls in python source.
+    - id: detect-private-key
+      name: detect-private-key
+      description: Checks for the existence of private keys.
+    - id: end-of-file-fixer
+      name: end-of-file-fixer
+      description: Makes sure files end in a newline and only a newline.
+    - id: trailing-whitespace
+      name: trailing-whitespace
+      description: Trims trailing whitespace
+    - id: requirements-txt-fixer
+      name: requirements-txt-fixer
+      description: Sorts entries in requirements.txt
+
+  - repo: https://github.com/psf/black
+    rev: 22.3.0
+    hooks:
+      - id: black
+        args: [--safe, --line-length=170]
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 3.9.2
+    hooks:
+    - id: flake8
+      language: python
+      name: flake8
+      description: Python style guide enforcement
+      additional_dependencies: [
+      'flake8-mutable', # Extension for mutable default arguments
+      'flake8-2020', # flake8 plugin which checks for misuse of `sys.version` or `sys.version_info`
+      'flake8-blind-except', # A flake8 extension that checks for blind except: statements
+      'flake8-bugbear', # A plugin for flake8 finding likely bugs and design problems in your program.
+      'flake8-builtins', # Check for python builtins being used as variables or parameters.
+      'flake8-comprehensions', # It helps you write a better list/set/dict comprehensions.
+      'flake8-copyright', # Adds copyright checks to flake8
+      'flake8-deprecated', # Warns about deprecated method calls.
+      'dlint', # Dlint is a tool for encouraging best coding practices and helping ensure we're writing secure Python code.
+      'flake8-alfred', # Alfred is a flake8 plugin to warn on unsafe/obsolete symbols
+      'flake8-broken-line', # Plugin to forbid backslashes (\) for line breaks
+      'flake8-debugger', # Debug statement checker
+      'flake8-logging-format', # Validate (lack of) logging format strings
+      'flake8-variables-names', # flake8 extension that helps to make more readable variables names
+      'flake8-tabs', # Tab (or Spaces) indentation style checker for flake8
+      'pep8-naming', # Check PEP-8 naming conventions, plugin for flake8
+      'flake8-string-format', # Check that indexed parameters are used in strings
+      'flake8-markdown', # Lints Python code blocks in Markdown files using flake8
+    ]
