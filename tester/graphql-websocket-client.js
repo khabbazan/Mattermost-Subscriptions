@@ -14,11 +14,18 @@ ws.onopen = () => {
   ws.send(JSON.stringify(authMessage));
 
   const subscriptionQuery = `
-    subscription subs {
-      onNewChatMessage(chatroom: "lovely") {
-        text
+    subscription subscription{
+      onNewChatMessage(channelIdentifier:"town-square"){
+        message{
+          id
+          message
+          createAt
+          owner{
+              username
+            }
+        }
       }
-    }
+  }
   `;
   const message = {
     id: '1',
