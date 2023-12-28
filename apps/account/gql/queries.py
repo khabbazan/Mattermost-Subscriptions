@@ -1,4 +1,5 @@
 import math
+
 import graphene
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
@@ -17,7 +18,7 @@ class UserList(graphene.ObjectType):
     user_list = graphene.Field(
         UserListType,
         page=graphene.Argument(PageType, description="Pagination details including page size and page number."),
-        description="Query to retrieve a paginated list of users."
+        description="Query to retrieve a paginated list of users.",
     )
 
     @login_required

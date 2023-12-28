@@ -56,9 +56,7 @@ class GraphqlWsClient:
 
     def __init__(self, transport: _transport.GraphqlWsTransport):
         """Constructor."""
-        assert isinstance(
-            transport, _transport.GraphqlWsTransport
-        ), "Given transport does not implement the 'GraphqlWsTransport' interface!"
+        assert isinstance(transport, _transport.GraphqlWsTransport), "Given transport does not implement the 'GraphqlWsTransport' interface!"
         self._transport = transport
         self._is_connected = False
 
@@ -111,9 +109,7 @@ class GraphqlWsClient:
         await self._transport.send(message)
         return msg_id
 
-    async def receive(
-        self, *, wait_id=None, assert_id=None, assert_type=None, raw_response=False
-    ):
+    async def receive(self, *, wait_id=None, assert_id=None, assert_type=None, raw_response=False):
         """Receive GraphQL message checking its content.
 
         Args:
@@ -137,10 +133,7 @@ class GraphqlWsClient:
                 break
 
         if assert_type is not None:
-            assert response["type"] == assert_type, (
-                f"Type `{assert_type}` expected, but `{response['type']}` received!"
-                f" Response: {response}."
-            )
+            assert response["type"] == assert_type, f"Type `{assert_type}` expected, but `{response['type']}` received!" f" Response: {response}."
         if assert_id is not None:
             assert response["id"] == assert_id, "Response id != expected id!"
 

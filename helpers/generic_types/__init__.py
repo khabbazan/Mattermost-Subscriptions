@@ -70,4 +70,3 @@ class PageType(graphene.InputObjectType):
 
     page_size = graphene.Int(description="The number of items per page.")
     page_number = graphene.Int(description="The page number.")
-

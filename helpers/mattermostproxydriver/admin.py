@@ -1,6 +1,5 @@
 import re
 
-import requests
 from django.conf import settings
 
 from helpers.mattermostproxydriver.user import MattermostUserProxy

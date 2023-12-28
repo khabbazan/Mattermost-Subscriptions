@@ -1,15 +1,17 @@
 import json
+
 import graphene
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from graphql_jwt.decorators import login_required
 from django.contrib.auth.models import User
+from graphql_jwt.decorators import login_required
 
 from apps.chat.gql.subscriptions import OnNewChatMessage
 from helpers import http_code
 from helpers.generic_types import ResponseBase
-from helpers.mattermostproxydriver.user import MattermostUserProxy
 from helpers.mattermostproxydriver.admin import MattermostAdminProxy
+from helpers.mattermostproxydriver.user import MattermostUserProxy
+
 
 class ChannelCreate(graphene.Mutation):
     """
@@ -37,18 +39,15 @@ class ChannelCreate(graphene.Mutation):
             ResponseBase: The result of the channel creation operation.
         """
         user = info.context.user
-        member_users = [
-            User.objects.filter(username__iexact=username).first()
-            for username in members
-        ]
+        member_users = [User.objects.filter(username__iexact=username).first() for username in members]
 
         if None in member_users:
             raise Exception("Members are not valid.")
 
         matter_admin = MattermostAdminProxy()
         channel_id = matter_admin.create_join_channel(channel_name=channel_name)
-        for u in member_users + [user]:
-            matter_admin.add_user_to_channel(channel_identifier=channel_name, user_identifier=u.username)
+        for us in member_users + [user]:
+            matter_admin.add_user_to_channel(channel_identifier=channel_name, user_identifier=us.username)
 
         if channel_id:
             return ResponseBase(
@@ -63,6 +62,7 @@ class ChannelCreate(graphene.Mutation):
                 status_code=http_code.HTTP_400_BAD_REQUEST_CODE,
                 message="Channel creation failed!",
             )
+
 
 class TextMessageSend(graphene.Mutation):
     """
@@ -95,15 +95,13 @@ class TextMessageSend(graphene.Mutation):
 
         formatted_response = {
             "id": response.get("id", None),
-            "message": response.get('message', None),
-            "create_at": response.get('create_at', None),
+            "message": response.get("message", None),
+            "create_at": response.get("create_at", None),
             "username": response.get("username", None),
-            "type": response.get('type', None),
+            "type": response.get("type", None),
         }
 
-        async_to_sync(OnNewChatMessage.new_chat_message)(
-            channel_identifier=channel_identifier, message=formatted_response
-        )
+        async_to_sync(OnNewChatMessage.new_chat_message)(channel_identifier=channel_identifier, message=formatted_response)
 
         channel_layer = get_channel_layer()
 
@@ -113,10 +111,7 @@ class TextMessageSend(graphene.Mutation):
         )
 
         # Prepare the message
-        message = {
-            "type": "chat_message",
-            "message": json.dumps({"channel_identifier": channel_identifier, "message": formatted_response})
-        }
+        message = {"type": "chat_message", "message": json.dumps({"channel_identifier": channel_identifier, "message": formatted_response})}
 
         # Broadcast the message to the group
         async_to_sync(channel_layer.group_send)(channel_identifier, message)

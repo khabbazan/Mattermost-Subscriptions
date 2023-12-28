@@ -86,9 +86,7 @@ class Serializer:
         def decode_extra_types(obj):
             """MessagePack hook to deserialize extra types."""
             if "__djangomodel__" in obj:
-                obj = next(
-                    django.core.serializers.deserialize("json", obj["as_str"])
-                ).object
+                obj = next(django.core.serializers.deserialize("json", obj["as_str"])).object
             elif "__datetime__" in obj:
                 obj = datetime.datetime.fromisoformat(obj["as_str"])
             elif "__date__" in obj:

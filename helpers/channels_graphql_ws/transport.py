@@ -92,9 +92,7 @@ class GraphqlWsTransportAiohttp(GraphqlWsTransport):
 
         """
         connected = asyncio.Event()
-        self._message_processor = asyncio.create_task(
-            self._process_messages(connected, timeout or self.TIMEOUT)
-        )
+        self._message_processor = asyncio.create_task(self._process_messages(connected, timeout or self.TIMEOUT))
         await asyncio.wait(
             [connected.wait(), self._message_processor],
             return_when=asyncio.FIRST_COMPLETED,
@@ -124,9 +122,7 @@ class GraphqlWsTransportAiohttp(GraphqlWsTransport):
 
         # Wait and receive the message.
         try:
-            payload = await asyncio.wait_for(
-                self._incoming_messages.get(), timeout or self.TIMEOUT
-            )
+            payload = await asyncio.wait_for(self._incoming_messages.get(), timeout or self.TIMEOUT)
             assert isinstance(payload, str), "Non-string data received!"
             return dict(json.loads(payload))
         except asyncio.TimeoutError as ex:
@@ -139,9 +135,7 @@ class GraphqlWsTransportAiohttp(GraphqlWsTransport):
         """Close the connection gracefully."""
         await self._connection.close(code=1000)
         try:
-            await asyncio.wait_for(
-                asyncio.shield(self._message_processor), timeout or self.TIMEOUT
-            )
+            await asyncio.wait_for(asyncio.shield(self._message_processor), timeout or self.TIMEOUT)
             self._message_processor.result()
         except asyncio.TimeoutError:
             pass
@@ -173,13 +167,8 @@ class GraphqlWsTransportAiohttp(GraphqlWsTransport):
                 timeout=timeout,
             )
             async with connection as self._connection:
-                if (
-                    self._connection.protocol
-                    != graphql_ws_consumer.GRAPHQL_WS_SUBPROTOCOL
-                ):
-                    raise RuntimeError(
-                        f"Server uses wrong subprotocol: {self._connection.protocol}!"
-                    )
+                if self._connection.protocol != graphql_ws_consumer.GRAPHQL_WS_SUBPROTOCOL:
+                    raise RuntimeError(f"Server uses wrong subprotocol: {self._connection.protocol}!")
                 connected.set()
                 async for msg in self._connection:
                     await self._incoming_messages.put(msg.data)

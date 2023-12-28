@@ -1,16 +1,17 @@
 import graphene
-from django.db import transaction
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from django.db import transaction
 from django.forms.models import model_to_dict
 from graphql_jwt.shortcuts import create_refresh_token
 from graphql_jwt.shortcuts import get_token
-from django.contrib.auth.models import User
 
 from helpers import http_code
 from helpers.generic_types import ResponseBase
 from helpers.generic_types import ResponseUnion
 from helpers.generic_types import ResponseWithToken
 from helpers.mattermostproxydriver.admin import MattermostAdminProxy
+
 
 class UserCreate(graphene.Mutation):
     """
@@ -40,6 +41,7 @@ class UserCreate(graphene.Mutation):
                 raise Exception("mattermost operation failed.")
 
         return ResponseBase(status=http_code.HTTP_200_OK, status_code=http_code.HTTP_200_OK_CODE, message="User created successfully!")
+
 
 class UserGetToken(graphene.Mutation):
     """

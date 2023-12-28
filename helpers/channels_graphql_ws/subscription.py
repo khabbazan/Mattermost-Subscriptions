@@ -185,9 +185,7 @@ class Subscription(graphene.ObjectType):
             pass
         else:
             if event_loop.is_running():
-                return event_loop.create_task(
-                    cls.broadcast_async(group=group, payload=payload)
-                )
+                return event_loop.create_task(cls.broadcast_async(group=group, payload=payload))
 
         return cls.broadcast_sync(group=group, payload=payload)
 
@@ -196,9 +194,7 @@ class Subscription(graphene.ObjectType):
         """Broadcast, asynchronous version."""
         # Manually serialize the `payload` to allow transfer of Django
         # models inside `payload`, auto serialization does not do this.
-        serialized_payload = await channels.db.database_sync_to_async(
-            Serializer.serialize, thread_sensitive=False
-        )(payload)
+        serialized_payload = await channels.db.database_sync_to_async(Serializer.serialize, thread_sensitive=False)(payload)
 
         # Send the message to the Channels group.
         group = cls._group_name(group)
@@ -221,9 +217,7 @@ class Subscription(graphene.ObjectType):
         serialized_payload = Serializer.serialize(payload)
 
         group = cls._group_name(group)
-        sync_channel_layer_group_send = asgiref.sync.async_to_sync(
-            cls._channel_layer().group_send
-        )
+        sync_channel_layer_group_send = asgiref.sync.async_to_sync(cls._channel_layer().group_send)
         # Will result in a call of `GraphqlWsConsumer.broadcast`.
         sync_channel_layer_group_send(
             group=group,
@@ -262,18 +256,14 @@ class Subscription(graphene.ObjectType):
         """Unsubscribe, asynchronous version."""
         # Send the 'unsubscribe' message to the Channels group.
         group = cls._group_name(group)
-        await cls._channel_layer().group_send(
-            group=group, message={"type": "unsubscribe", "group": group}
-        )
+        await cls._channel_layer().group_send(group=group, message={"type": "unsubscribe", "group": group})
 
     @classmethod
     def unsubscribe_sync(cls, *, group=None):
         """Unsubscribe, synchronous version."""
         # Send the message to the Channels group.
         group = cls._group_name(group)
-        sync_channel_layer_group_send = asgiref.sync.async_to_sync(
-            cls._channel_layer().group_send
-        )
+        sync_channel_layer_group_send = asgiref.sync.async_to_sync(cls._channel_layer().group_send)
         sync_channel_layer_group_send(
             group=group,
             message={
@@ -283,9 +273,7 @@ class Subscription(graphene.ObjectType):
         )
 
     @classmethod
-    def Field(  # pylint: disable=invalid-name
-        cls, name=None, description=None, deprecation_reason=None, required=False
-    ):
+    def Field(cls, name=None, description=None, deprecation_reason=None, required=False):  # noqa
         """Represent subscription as a field to mount it to the schema.
 
         Typical usage:
@@ -332,11 +320,7 @@ class Subscription(graphene.ObjectType):
         if not output:
             fields = collections.OrderedDict()
             for base in reversed(cls.__mro__):
-                fields.update(
-                    graphene.types.utils.yank_fields_from_attrs(
-                        base.__dict__, _as=graphene.Field
-                    )
-                )
+                fields.update(graphene.types.utils.yank_fields_from_attrs(base.__dict__, _as=graphene.Field))
             output = cls
 
         if not arguments:
@@ -351,9 +335,7 @@ class Subscription(graphene.ObjectType):
         publish = publish or getattr(cls, "publish", None)
         unsubscribed = unsubscribed or getattr(cls, "unsubscribed", None)
         assert publish is not None, (
-            f"Subscription '{cls.__qualname__}' does not define a"
-            " method 'publish'! All subscriptions must define"
-            " 'publish' which processes GraphQL queries!"
+            f"Subscription '{cls.__qualname__}' does not define a" " method 'publish'! All subscriptions must define" " 'publish' which processes GraphQL queries!"
         )
 
         if _meta.fields:

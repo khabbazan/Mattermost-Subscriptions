@@ -25,7 +25,6 @@ import asyncio
 from typing import Optional
 
 import channels.testing
-
 import channels_graphql_ws.client
 import channels_graphql_ws.transport
 
@@ -60,11 +59,7 @@ class GraphqlWsClient(channels_graphql_ws.client.GraphqlWsClient):
             else:
                 if self._is_keep_alive_response(received):
                     continue
-                assert False, (
-                    f"{error_message}\n{received}"
-                    if error_message is not None
-                    else f"Message received when nothing expected!\n{received}"
-                )
+                assert False, f"{error_message}\n{received}" if error_message is not None else f"Message received when nothing expected!\n{received}"
 
 
 class GraphqlWsTransport(channels_graphql_ws.transport.GraphqlWsTransport):
@@ -89,9 +84,7 @@ class GraphqlWsTransport(channels_graphql_ws.transport.GraphqlWsTransport):
         """Connect to the server."""
         ok, code = await self._comm.connect(timeout or self.TIMEOUT)
         if not ok:
-            raise RuntimeError(
-                f"Failed to establish fake connection! WebSocket close code={code}!"
-            )
+            raise RuntimeError(f"Failed to establish fake connection! WebSocket close code={code}!")
 
     async def send(self, message: dict) -> None:
         """Send message."""
@@ -109,11 +102,9 @@ class GraphqlWsTransport(channels_graphql_ws.transport.GraphqlWsTransport):
         """Wait server to close the connection."""
         message = await self._comm.receive_output(timeout or self.TIMEOUT)
         assert message["type"] == "websocket.close", (
-            "Message with a wrong type received while waiting server to close the"
-            f" connection! Expected 'websocket.close' received '{message['type']}'!"
+            "Message with a wrong type received while waiting server to close the" f" connection! Expected 'websocket.close' received '{message['type']}'!"
         )
         assert message["code"] == 4000, (
-            "Message with a wrong code received while waiting server to close the"
-            f" connection! Expected '4000' received '{message['code']}'!"
+            "Message with a wrong code received while waiting server to close the" f" connection! Expected '4000' received '{message['code']}'!"
         )
         await self._comm.disconnect(timeout=timeout or self.TIMEOUT)

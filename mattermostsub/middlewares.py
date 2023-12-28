@@ -1,8 +1,8 @@
-from channels.middleware import BaseMiddleware
 from channels.db import database_sync_to_async
-from graphql_jwt.utils import jwt_decode
-from django.contrib.auth.models import User
+from channels.middleware import BaseMiddleware
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.models import User
+from graphql_jwt.utils import jwt_decode
 
 
 class JWTwsAuthMiddleware(BaseMiddleware):
@@ -20,15 +20,15 @@ class JWTwsAuthMiddleware(BaseMiddleware):
             receive (callable): Receive function for the WebSocket.
             send (callable): Send function for the WebSocket.
         """
-        headers = dict(scope['headers'])
-        if b'authorization' in headers:
+        headers = dict(scope["headers"])
+        if b"authorization" in headers:
             try:
                 # Decode the JWT token and retrieve the user
-                token_name, token_key = headers[b'authorization'].decode().split()
-                if token_name == 'JWT':
+                token_name, token_key = headers[b"authorization"].decode().split()
+                if token_name == "JWT":
                     decoded_data = jwt_decode(token_key)
-                    scope['user'] = await self.get_user(decoded_data['username'])
-            except Exception as e:
+                    scope["user"] = await self.get_user(decoded_data["username"])
+            except Exception:
                 # In case of any exception, continue without modifying the scope
                 pass
         return await super().__call__(scope, receive, send)

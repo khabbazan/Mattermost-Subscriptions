@@ -6,6 +6,7 @@ from apps.chat.gql.types import MessageListType
 from helpers.generic_types import PageType
 from helpers.mattermostproxydriver.user import MattermostUserProxy
 
+
 class ChannelList(graphene.ObjectType):
     """
     GraphQL ObjectType for listing channels.
@@ -15,7 +16,7 @@ class ChannelList(graphene.ObjectType):
     channel_list = graphene.Field(
         ChannelListType,
         page=graphene.Argument(PageType, description="Pagination details including page size and page number."),
-        description="Query to retrieve a paginated list of channels."
+        description="Query to retrieve a paginated list of channels.",
     )
 
     @login_required
@@ -52,7 +53,7 @@ class GetMessageList(graphene.ObjectType):
         MessageListType,
         channel_identifier=graphene.Argument(graphene.String, required=True, description="Identifier of the channel to retrieve messages from."),
         page=graphene.Argument(PageType, description="Pagination details including page size and page number."),
-        description="Query to retrieve a paginated list of messages from a specified channel."
+        description="Query to retrieve a paginated list of messages from a specified channel.",
     )
 
     @login_required

@@ -1,6 +1,8 @@
 import graphene
+
 from apps.chat.gql.types import MessageQueryType
 from helpers import channels_graphql_ws
+
 
 class OnNewChatMessage(channels_graphql_ws.Subscription):
     """

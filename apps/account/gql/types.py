@@ -2,6 +2,7 @@ import graphene
 from django.contrib.auth.models import User
 from graphene_django import DjangoObjectType
 
+
 class UserQueryType(DjangoObjectType):
     """
     DjangoObjectType for the User model.
@@ -11,6 +12,7 @@ class UserQueryType(DjangoObjectType):
     class Meta:
         model = User
         fields = ("id", "username", "email", "is_staff")  # Specifying the fields to include in the GraphQL type
+
 
 class UserListType(graphene.ObjectType):
     """

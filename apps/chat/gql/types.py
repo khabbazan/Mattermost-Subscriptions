@@ -4,6 +4,7 @@ from django.core.handlers.asgi import ASGIRequest
 
 from apps.account.gql.types import UserQueryType
 
+
 class MessageQueryType(graphene.ObjectType):
     """
     GraphQL type representing a message in a chat system.
@@ -44,6 +45,7 @@ class MessageQueryType(graphene.ObjectType):
         """Resolve the type of the message."""
         return root["type"]
 
+
 class MessageListType(graphene.ObjectType):
     """
     GraphQL type representing a paginated list of messages.
@@ -52,6 +54,7 @@ class MessageListType(graphene.ObjectType):
     data = graphene.List(MessageQueryType, description="List of messages.")
     has_next = graphene.Boolean(description="Indicates if there are more pages available.")
     has_previous = graphene.Boolean(description="Indicates if there are previous pages available.")
+
 
 class ChannelQueryType(graphene.ObjectType):
     """
@@ -75,6 +78,7 @@ class ChannelQueryType(graphene.ObjectType):
     def resolve_last_message(root, info):
         """Resolve the last message sent in the channel."""
         return root["last_message"]
+
 
 class ChannelListType(graphene.ObjectType):
     """

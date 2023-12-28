@@ -5,7 +5,6 @@ from django.conf import settings
 from mattermostdriver import Driver
 
 
-
 class MattermostUserProxy:
     """
      A proxy class for interacting with a Mattermost server as a User.
@@ -160,8 +159,7 @@ class MattermostUserProxy:
 
         return paginated_channels, has_next
 
-    def join_to_channel(self, channel_identifier, team_identifier=settings.MATTERMOST_SERVER["team_identifier"],
-                        exception=True):
+    def join_to_channel(self, channel_identifier, team_identifier=settings.MATTERMOST_SERVER["team_identifier"], exception=True):
         """
         Joins the authenticated user to a specified channel.
         """
@@ -181,8 +179,7 @@ class MattermostUserProxy:
                 raise e
             return False
 
-    def leave_from_channel(self, channel_identifier, team_identifier=settings.MATTERMOST_SERVER["team_identifier"],
-                           exception=True):
+    def leave_from_channel(self, channel_identifier, team_identifier=settings.MATTERMOST_SERVER["team_identifier"], exception=True):
         """
         Removes the authenticated user from a specified channel.
         """
@@ -202,8 +199,7 @@ class MattermostUserProxy:
                 raise e
             return False
 
-    def send_message(self, channel_identifier, message, team_identifier=settings.MATTERMOST_SERVER["team_identifier"],
-                     time_zone=settings.TIME_ZONE, exception=True):
+    def send_message(self, channel_identifier, message, team_identifier=settings.MATTERMOST_SERVER["team_identifier"], time_zone=settings.TIME_ZONE, exception=True):
         """
         Sends a message to a specified channel.
         """
@@ -221,8 +217,7 @@ class MattermostUserProxy:
 
             formatted_response = {
                 "message": response["message"],
-                "create_at": self.convert_timestamp_to_iso(response["create_at"], time_zone) if time_zone else response[
-                    "create_at"],
+                "create_at": self.convert_timestamp_to_iso(response["create_at"], time_zone) if time_zone else response["create_at"],
                 "user_id": response["user_id"],
                 "username": self._find_user_id_or_name(response["user_id"], find_name=True),
                 "id": response["id"],
@@ -235,8 +230,15 @@ class MattermostUserProxy:
                 raise e
             return False
 
-    def get_messages(self, channel_identifier, team_identifier=settings.MATTERMOST_SERVER["team_identifier"],
-                     time_zone=settings.TIME_ZONE, last_message=False, params=None, exception=True):
+    def get_messages(
+        self,
+        channel_identifier,
+        team_identifier=settings.MATTERMOST_SERVER["team_identifier"],
+        time_zone=settings.TIME_ZONE,
+        last_message=False,
+        params=None,
+        exception=True,
+    ):
         """
         Retrieves messages from a specified channel, optionally converting timestamps to a given timezone.
         If 'last_message' is True, only the last message is returned.
@@ -261,8 +263,7 @@ class MattermostUserProxy:
             formatted_messages = [
                 {
                     "message": msg["message"],
-                    "create_at": self.convert_timestamp_to_iso(msg["create_at"], time_zone) if time_zone else msg[
-                        "create_at"],
+                    "create_at": self.convert_timestamp_to_iso(msg["create_at"], time_zone) if time_zone else msg["create_at"],
                     "user_id": msg["user_id"],
                     "username": self._find_user_id_or_name(msg["user_id"], find_name=True),
                     "id": msg["id"],
@@ -271,9 +272,8 @@ class MattermostUserProxy:
                 for msg in messages["posts"].values()
             ]
 
-            return formatted_messages, bool(messages['prev_post_id']), bool(messages['next_post_id'])
+            return formatted_messages, bool(messages["prev_post_id"]), bool(messages["next_post_id"])
         except Exception as e:
             if exception:
                 raise e
             return [], False, False
-
