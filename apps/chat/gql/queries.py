@@ -75,7 +75,8 @@ class GetMessageList(graphene.ObjectType):
 
         matter_user = MattermostUserProxy(login_id=user.username, password=user.password[:30])
         data, has_prev, has_next = matter_user.get_messages(channel_identifier=channel_identifier, params={"page": page["page_number"], "per_page": page["page_size"]})
+        sorted_data = sorted(data, key=lambda x: x["create_at"])
 
-        message_list = MessageListType(data=data, has_previous=has_prev, has_next=has_next)
+        message_list = MessageListType(data=sorted_data, has_previous=has_prev, has_next=has_next)
 
         return message_list

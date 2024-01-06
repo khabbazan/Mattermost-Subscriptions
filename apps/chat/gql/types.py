@@ -1,6 +1,7 @@
 import graphene
 from django.contrib.auth.models import User
 from django.core.handlers.asgi import ASGIRequest
+from django.core.handlers.wsgi import WSGIRequest
 
 from apps.account.gql.types import UserQueryType
 
@@ -34,7 +35,7 @@ class MessageQueryType(graphene.ObjectType):
 
     def resolve_owner(root, info):
         """Resolve the owner (sender) of the message."""
-        if isinstance(info.context, ASGIRequest):
+        if isinstance(info.context, WSGIRequest) or isinstance(info.context, ASGIRequest):
             return User.objects.filter(username=root["username"]).first()
         else:
             return User.objects.filter(username=root["username"]).afirst()
