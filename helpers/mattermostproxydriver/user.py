@@ -125,7 +125,7 @@ class MattermostUserProxy:
             if channel["display_name"] and not any(exclude_str in channel["name"].lower() for exclude_str in exclude_list):
                 # Fetch the messages of the channel and get the last one
                 # This is a placeholder - replace with actual method to fetch messages and then get the last message
-                last_message, _ = self.get_messages(team_identifier=team_identifier, channel_identifier=channel["name"], last_message=True)
+                last_message, _, _ = self.get_messages(team_identifier=team_identifier, channel_identifier=channel["name"], last_message=True)
 
                 filtered_channels.append(
                     {

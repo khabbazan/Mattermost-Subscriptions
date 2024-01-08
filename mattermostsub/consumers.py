@@ -1,8 +1,8 @@
-from helpers import channels_graphql_ws
+from helpers.channels_graphql_ws import graphql_ws_consumer
 from mattermostsub.schema import schema
 
 
-class MyGraphqlWsConsumer(channels_graphql_ws.GraphqlWsConsumer):
+class MyGraphqlWsConsumer(graphql_ws_consumer.GraphqlWsConsumer):
     """Channels WebSocket consumer which provides GraphQL API."""
 
     schema = schema

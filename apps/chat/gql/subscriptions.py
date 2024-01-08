@@ -1,10 +1,10 @@
 import graphene
 
 from apps.chat.gql.types import MessageQueryType
-from helpers import channels_graphql_ws
+from helpers.channels_graphql_ws import subscription
 
 
-class OnNewChatMessage(channels_graphql_ws.Subscription):
+class OnNewChatMessage(subscription.Subscription):
     """
     GraphQL Subscription for new chat messages.
     This subscription allows clients to listen for new messages on a specified channel.
