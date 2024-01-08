@@ -35,6 +35,12 @@ ws.onopen = () => {
     }
   };
   ws.send(JSON.stringify(message));
+
+  ws.onmessage = function(event) {
+    // Handle incoming messages, including subscription data
+    console.log("Received:", event.data);
+  };
+
 };
 
 ws.onmessage = function(event) {
