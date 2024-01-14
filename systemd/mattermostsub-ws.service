@@ -1,0 +1,17 @@
+[Unit]
+Description=Daphne ASGI server for mattermostsub
+Requires=mattermostsub-ws.socket
+After=network.target
+
+[Service]
+User=daphne_user
+Group=www-data
+WorkingDirectory=/home/daphne/mattermostsub
+Environment="DJANGO_SETTINGS_MODULE=mattermostsub.settings"
+ExecStart=/home/daphne/api/venv/bin/daphne \
+          -u /run/mattermostsub/mattermostsub-ws.sock \
+          mattermostsub.asgi:application \
+          -v2
+
+[Install]
+WantedBy=multi-user.target

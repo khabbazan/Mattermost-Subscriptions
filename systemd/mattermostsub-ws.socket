@@ -1,0 +1,8 @@
+[Unit]
+Description=mattermostsub websocket api socket
+
+[Socket]
+ListenStream=/run/mattermostsub/mattermostsub-ws.sock
+
+[Install]
+WantedBy=sockets.target
